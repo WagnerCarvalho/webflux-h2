@@ -20,24 +20,10 @@ public class PersonService {
   private Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  private final TransactionTemplate transactionTemplate;
-
-  @Autowired
-  private final PersonRepository personRepository;
-
-  public PersonService(TransactionTemplate transactionTemplate, PersonRepository personRepository) {
-    this.transactionTemplate = transactionTemplate;
-    this.personRepository = personRepository;
-
-  }
-
-  public Optional<Person> findByEmail(final String email) {
-    return personRepository.findByEmail(email);
-  }
+  private PersonRepository personRepository;
 
   private Person persistPerson(final Person person) {
     personRepository.save(person);
-    personRepository.findAll().forEach(p -> log.info("person: {}", p));
     return person;
   }
 
