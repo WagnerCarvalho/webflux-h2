@@ -8,15 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SpringBootApplication
 @EntityScan("com.webflux.app.business.domain")
 @EnableJpaRepositories("com.webflux.app.business.repository")
 public class AppApplication {
-
-  private Logger log = LoggerFactory.getLogger(this.getClass());
 
   public static void main(final String[] args) {
     SpringApplication.run(AppApplication.class, args);
@@ -27,7 +23,7 @@ public class AppApplication {
     return args -> {
       Person person  = new Person( 1L ,"wcarvalho", "wcarvalhoti@gmail.com");
       personRepository.save(person);
-      personRepository.findAll().forEach(p -> log.info("person: {}", p));
+      personRepository.findAll();
     };
   }
 
