@@ -15,10 +15,12 @@ public class RouterConfig {
 
   @Bean
   public RouterFunction<ServerResponse> routes(final PersonHandler personHandler) {
-    return nest(path("/person").and(accept(APPLICATION_JSON_UTF8)).and(contentType(APPLICATION_JSON_UTF8)),
-            route(POST("/"), personHandler::create))
-            .andRoute(GET("/person_list"), request -> personHandler.findAll())
-            .andRoute(DELETE("/person/{id}"), personHandler::delete)
-            .andRoute(PUT("/person/{id}"), personHandler::update);
+    return nest(path("/person").and(accept(APPLICATION_JSON_UTF8))
+           .and(contentType(APPLICATION_JSON_UTF8)),
+            route(
+               POST("/"), personHandler::create)).andRoute(
+               GET("/person_list"), request -> personHandler.findAll()).andRoute(
+               DELETE("/person/{id}"), personHandler::delete).andRoute(
+               PUT("/person/{id}"), personHandler::update);
   }
 }
