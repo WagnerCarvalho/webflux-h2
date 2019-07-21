@@ -63,14 +63,21 @@ public class PersonService {
             .doOnError(e -> log.error("user already registered", e));
   }
 
-  private Optional<Person> updatePerson(Long id, Person updatePerson) {
+  private Person updatePerson(Long id, Person updatePerson) {
     final Optional<Person> updatePersonEntity = personRepository.findById(id);
     if (updatePersonEntity.isPresent()) {
-      personRepository.updatePerson(id, updatePerson.getNickname(), updatePerson.getEmail());
+      updatePerson.setId(id);
+      updatePerson.setNickname(updatePerson.getNickname() == null? updatePersonEntity.get().getNickname():
+              updatePerson.getNickname());
+
+      updatePerson.setEmail(updatePerson.getEmail() == null? updatePersonEntity.get().getEmail():
+              updatePerson.getEmail());
+
+      personRepository.save(updatePerson);
     }else{
       throw new ValidationException("user not registered");
     }
-    return updatePersonEntity;
+    return updatePerson;
   }
 
 

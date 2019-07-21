@@ -18,19 +18,19 @@ public class Person {
     this.nickname = nickname;
     this.email = email;
   }
-  
+
   public Person() {}
 
   public Long getId() {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   public String getNickname() {
     return nickname;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public void setNickname(String nickname) {
