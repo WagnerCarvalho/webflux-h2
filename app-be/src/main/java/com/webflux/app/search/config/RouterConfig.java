@@ -1,6 +1,6 @@
-package com.webflux.app.business.config;
+package com.webflux.app.search.config;
 
-import com.webflux.app.business.handler.PersonHandler;
+import com.webflux.app.search.handler.SearchHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -13,12 +13,9 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Configuration
 public class RouterConfig {
 
-  @Bean
-  public RouterFunction<ServerResponse> routes(final PersonHandler personHandler) {
-    return nest(path("/person").and(accept(APPLICATION_JSON_UTF8)).and(contentType(APPLICATION_JSON_UTF8)),
-            route(POST("/person"), personHandler::create))
-            .andRoute(GET("/person_list"), request -> personHandler.findAll())
-            .andRoute(DELETE("/person/{id}"), personHandler::delete)
-            .andRoute(PUT("/person/{id}"), personHandler::update);
-  }
+//  @Bean
+//  public RouterFunction<ServerResponse> routes(final SearchHandler searchHandler) {
+//    return nest(path("/person").and(accept(APPLICATION_JSON_UTF8)).and(contentType(APPLICATION_JSON_UTF8)),
+//            //route(GET("/"), searchHandler::searchAll));
+//  }
 }
