@@ -10,11 +10,10 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
-
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
-import static org.springframework.web.reactive.function.server.ServerResponse.badRequest;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static org.springframework.web.reactive.function.server.ServerResponse.*;
 import static reactor.core.publisher.Mono.fromCallable;
 
 @Component
@@ -31,14 +30,35 @@ public class PersonHandler {
   public Mono<ServerResponse> create(final ServerRequest serverRequest) {
     return serverRequest.bodyToMono(Person.class)
             .flatMap(personService::save)
-            .map(person -> UriComponentsBuilder.fromUriString("/person/{id}").buildAndExpand(person.getId()).toUri())
-            .flatMap(uri -> ServerResponse.created(uri).build())
+            .flatMap(personCreate -> ok().body(fromObject(personCreate)))
+            .switchIfEmpty(Mono.defer(() -> notFound().build()))
+            .onErrorMap(ValidationException.class, BadRequestException::new);
+  }
+
+  public Mono<ServerResponse> delete(final ServerRequest serverRequest) {
+    final Long id = Long.valueOf(serverRequest.pathVariable("id"));
+    return Mono.just(serverRequest.queryParams())
+            .flatMap(deletePerson -> personService.delete(id))
+            .flatMap(personUpdate -> ok().body(fromObject(personUpdate)))
+            .switchIfEmpty(Mono.defer(() -> notFound().build()))
             .onErrorMap(ValidationException.class, BadRequestException::new);
   }
 
   public Mono<ServerResponse> findAll() {
     return fromCallable(personRepository::findAll)
             .publishOn(Schedulers.elastic())
-            .flatMap(person -> ok().body(fromObject(person)));
+            .flatMap(person -> ok().body(fromObject(person)))
+            .onErrorMap(ValidationException.class, BadRequestException::new);
   }
+
+  public Mono<ServerResponse> update(final ServerRequest serverRequest) {
+    final Long id = Long.valueOf(serverRequest.pathVariable("id"));
+    return serverRequest.bodyToMono(Person.class)
+            .flatMap(personUpdate -> personService.update(id, personUpdate))
+            .flatMap(personEntity -> ok().body(fromObject(personEntity)))
+            .switchIfEmpty(Mono.defer(() -> notFound().build()))
+            .onErrorMap(ValidationException.class, BadRequestException::new);
+  }
+
+
 }

@@ -18,7 +18,7 @@ public class Person {
     this.nickname = nickname;
     this.email = email;
   }
-
+  
   public Person() {}
 
   public Long getId() {
