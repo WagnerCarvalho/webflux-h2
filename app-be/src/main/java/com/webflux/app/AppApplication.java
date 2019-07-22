@@ -19,9 +19,9 @@ public class AppApplication {
   }
 
   @Bean
-  CommandLineRunner start(PersonRepository personRepository){
+  CommandLineRunner start(final PersonRepository personRepository) {
     return args -> {
-      Person person  = new Person( 1L ,"wcarvalho", "wcarvalhoti@gmail.com");
+      Person person  = new Person(1L,"wcarvalho", "wcarvalhoti@gmail.com");
       personRepository.save(person);
       personRepository.findAll();
     };

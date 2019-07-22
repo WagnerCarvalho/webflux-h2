@@ -13,13 +13,14 @@ public class Person {
   private String nickname;
   private String email;
 
-  public Person(Long id, String nickname, String email) {
+  public Person() {
+  }
+
+  public Person(final Long id, final String nickname, final String email) {
     this.id = id;
     this.nickname = nickname;
     this.email = email;
   }
-
-  public Person() {}
 
   public Long getId() {
     return id;
@@ -29,11 +30,11 @@ public class Person {
     return nickname;
   }
 
-  public void setId(Long id) {
+  public void setId(final Long id) {
     this.id = id;
   }
 
-  public void setNickname(String nickname) {
+  public void setNickname(final String nickname) {
     this.nickname = nickname;
   }
 
@@ -41,7 +42,7 @@ public class Person {
     return email;
   }
 
-  public void setEmail(String email) {
+  public void setEmail(final String email) {
     this.email = email;
   }
 }

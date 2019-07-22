@@ -11,7 +11,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
-import static org.springframework.web.reactive.function.server.ServerResponse.*;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 import static reactor.core.publisher.Mono.fromCallable;
 
 @Component
@@ -20,7 +21,7 @@ public class PersonHandler {
   private final PersonService personService;
   private final PersonRepository personRepository;
 
-  public PersonHandler(PersonService personService, PersonRepository personRepository) {
+  public PersonHandler(final PersonService personService, final PersonRepository personRepository) {
     this.personService = personService;
     this.personRepository = personRepository;
   }
@@ -57,6 +58,4 @@ public class PersonHandler {
             .switchIfEmpty(Mono.defer(() -> notFound().build()))
             .onErrorMap(ValidationException.class, BadRequestException::new);
   }
-
-
 }

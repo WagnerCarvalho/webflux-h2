@@ -1,6 +1,5 @@
 package com.webflux.app.business.service;
 
-import com.sun.el.parser.AstFalse;
 import com.webflux.app.business.domain.Person;
 import com.webflux.app.business.exception.ValidationException;
 import com.webflux.app.business.repository.PersonRepository;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 import static reactor.core.publisher.Mono.fromCallable;
@@ -22,7 +20,7 @@ public class PersonService {
   private PersonRepository personRepository;
   private Logger log = LoggerFactory.getLogger(this.getClass());
 
-  private Person createPerson(Person person) {
+  private Person createPerson(final Person person) {
     final Person persistedPersonEntity = personRepository.findFirstByEmail(person.getEmail());
     if (persistedPersonEntity == null) {
       return personRepository.save(person);
@@ -45,11 +43,11 @@ public class PersonService {
             .doOnError(e -> log.error("user not registered", e));
   }
 
-  private Optional<Person> deletePerson(Long id) {
+  private Optional<Person> deletePerson(final Long id) {
     final Optional<Person> deletePersonEntity = personRepository.findById(id);
     if (deletePersonEntity.isPresent()) {
       personRepository.deleteById(id);
-    }else{
+    } else {
       throw new ValidationException("user not registered");
     }
     return deletePersonEntity;
@@ -63,25 +61,20 @@ public class PersonService {
             .doOnError(e -> log.error("user already registered", e));
   }
 
-  private Person updatePerson(Long id, Person updatePerson) {
+  private Person updatePerson(final Long id, final Person updatePerson) {
     final Optional<Person> updatePersonEntity = personRepository.findById(id);
     if (updatePersonEntity.isPresent()) {
       updatePerson.setId(id);
-      updatePerson.setNickname(updatePerson.getNickname() == null? updatePersonEntity.get().getNickname():
+      updatePerson.setNickname(updatePerson.getNickname() == null ? updatePersonEntity.get().getNickname() :
               updatePerson.getNickname());
 
-      updatePerson.setEmail(updatePerson.getEmail() == null? updatePersonEntity.get().getEmail():
+      updatePerson.setEmail(updatePerson.getEmail() == null ? updatePersonEntity.get().getEmail() :
               updatePerson.getEmail());
 
       personRepository.save(updatePerson);
-    }else{
+    } else {
       throw new ValidationException("user not registered");
     }
     return updatePerson;
   }
-
-
-
-
-
 }
